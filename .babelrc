@@ -1,0 +1,9 @@
+{
+  "presets": [
+    "@babel/preset-env", //将es6语法转化为es5
+    "@babel/preset-react" //将react语法转化为浏览器可以识别的语法
+  ],
+  "plugins": [
+
+  ]
+}
