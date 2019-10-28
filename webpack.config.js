@@ -59,9 +59,9 @@ var webpackConfig = {
       {
         test: /\.css$/,
         use: [
-          "style-loader",
+          "style-loader",//将css通过style的形式插入html的头部head中
           {
-            loader:"css-loader",
+            loader:"css-loader",  
             //开启cssModule，避免类名重复
             options:{
               modules:true,
@@ -73,7 +73,7 @@ var webpackConfig = {
       {
         test: /\.less$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,//将css文件从html中提取出来
           "css-loader",
           "less-loader",
           "postcss-loader"
