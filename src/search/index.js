@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {a} from '../common/common.js';
 
 export default class Search extends Component {
   render() {

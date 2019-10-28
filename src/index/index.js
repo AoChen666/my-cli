@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import ReactDom from 'react-dom';
+import {a} from '../common/common.js';
 
 import './index.less';
 
@@ -10,7 +11,7 @@ export default class Index extends Component{
     return (
 
       <div className="box">
-       <div className="box1"></div>
+       <div className="box1">{a}</div>
         
       </div>
     )
