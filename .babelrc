@@ -4,6 +4,7 @@
     "@babel/preset-react" //将react语法转化为浏览器可以识别的语法
   ],
   "plugins": [
-
+    "@babel/plugin-syntax-dynamic-import", //动态懒加载所需要插件 动态import
+    "@babel/plugin-proposal-class-properties" //解决Webpack中提示syntax 'classProperties' isn't currently enabled的错误
   ]
 }
