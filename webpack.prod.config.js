@@ -25,7 +25,7 @@ const setMPA = () => {
       htmlPage.push(new HtmlWebpackPlugin({
         template: path.resolve(SRC_PATH,'index.html'),
         filename: `${pageName}.html`,
-        chunks: ['common',pageName],
+        chunks: ['vender-react','commons',pageName],
         title: pageTitle[idx],
         inject: true,  //将chunk引入至html
         minify: {
@@ -146,10 +146,22 @@ var webpackConfig = {
   optimization: {
     splitChunks:{
       cacheGroups: {
-        commons:{
-          test:/(react|react-dom)/,
-          name: 'common',
-          chunks:'all'
+        // commons:{
+        //   test:/(react|react-dom)/,
+        //   name: 'common',
+        //   chunks:'all'
+        // }
+        commons: {
+          chunks: "initial",
+          minChunks: 2,
+          maxInitialRequests: 5, // The default limit is too small to showcase the effect
+          minSize: 0,// This is example is too small to create commons chunks,
+        },
+        'vender-react':{
+          test:/react/,
+          chunks:'initial',
+          name:'vender-react',
+          enforce:true
         }
       }
     }

@@ -6,6 +6,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const htmlWebpackExternalsPlugin=require('html-webpack-externals-plugin');
 
 const BASE_PATH = path.resolve(__dirname);
 const SRC_PATH = path.resolve(BASE_PATH,'src');
@@ -22,17 +23,17 @@ const setMPA = () => {
       htmlPage.push(new HtmlWebpackPlugin({
         template: path.resolve(SRC_PATH,'index.html'),
         filename: `${pageName}.html`,
-        chunks: ['common',pageName],
+        chunks: ['manifest','vendor-react','common',pageName],
         title: '我的你付款了浪费耐久',
         inject: true,  //将chunk引入至html
-        minify: {
-          html5: true,
-          collapseWhitespace: true,
-          preserveLineBreaks: false,
-          minifyCSS: true,
-          minifyJS: true,
-          removeComments: false //清理html中的注释
-        }
+        // minify: {
+        //   html5: true,
+        //   collapseWhitespace: true,
+        //   preserveLineBreaks: false,
+        //   minifyCSS: true,
+        //   minifyJS: true,
+        //   removeComments: false //清理html中的注释
+        // }
       }))
     }
   });
@@ -49,6 +50,10 @@ var webpackConfig = {
     path: BUILD_PATH,
     filename: '[name]_[chunkhash:8].js'
   },
+  // externals:{
+  //   "react":'React',
+  //   "react-dom":'ReactDOM'
+  // },
   module: {
     rules: [
       {
@@ -59,9 +64,9 @@ var webpackConfig = {
       {
         test: /\.css$/,
         use: [
-          "style-loader",
+          "style-loader",//将css通过style的形式插入html的头部head中
           {
-            loader:"css-loader",
+            loader:"css-loader",  
             //开启cssModule，避免类名重复
             options:{
               modules:true,
@@ -73,7 +78,7 @@ var webpackConfig = {
       {
         test: /\.less$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,//将css文件从html中提取出来
           "css-loader",
           "less-loader",
           "postcss-loader"
@@ -117,13 +122,31 @@ var webpackConfig = {
   ].concat(htmlPage),
   optimization: {
     splitChunks:{
+      // chunks: "all",
       cacheGroups: {
-        commons:{
-          test:/(react|react-dom)/,
-          name: 'common',
-          chunks:'all'
+        //  commons:{
+        //   test:/react/,
+        //   name: 'common',
+        //   chunks:'all'
+        // },
+        commons: {
+          chunks: "initial",
+          minChunks: 2,
+          name:'common',
+          maxInitialRequests: 5, // The default limit is too small to showcase the effect
+          minSize: 0,// This is example is too small to create commons chunks,
+        },
+        'vendor-react':{
+          test:/node_modules/,
+          chunks:'initial',
+          name:'vendor-react',
+          enforce:true,
+          priority:1
         }
       }
+    },
+    runtimeChunk: {   //将webpack的公共模块管理，信息清单等提取出来为一个公共包
+      name: "manifest"
     }
   },
   // devtool: 'source-map',//一般开发时配置用于调试，报错时可显示源码

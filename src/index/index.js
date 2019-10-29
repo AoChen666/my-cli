@@ -1,5 +1,6 @@
 import React,{Component,lazy,Suspense} from 'react';
 import ReactDom from 'react-dom';
+import {a} from '../common/common.js';
 
 import './index.less';
 
