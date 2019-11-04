@@ -1,6 +1,7 @@
 import React,{Component,lazy,Suspense} from 'react';
 import ReactDom from 'react-dom';
 import {a} from '../common/common.js';
+import {isEqual} from 'lodash'
 
 import './index.less';
 
@@ -20,6 +21,8 @@ export default class Index extends Component{
     const Search = lazy(()=>{return import('../search/index.js')});
     console.log(Search,'Search')
     this.setState({Search:Search});
+    console.log(Array.from('asdffff'));
+    isEqual({a:1},{a:1});
   }
   render(){
     // console.log(w,22)

@@ -6,7 +6,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const htmlWebpackExternalsPlugin=require('html-webpack-externals-plugin');
+const  TerserPlugin= require('terser-webpack-plugin');
 const copyHtmlWebpackPlugin = require('copy-webpack-plugin');
 
 const BASE_PATH = path.resolve(__dirname);
@@ -51,6 +51,10 @@ var webpackConfig = {
     path: BUILD_PATH,
     filename: '[name]_[chunkhash:8].js'
   },
+    externals:{
+      "react":'React',
+      "react-dom":'ReactDOM'
+    },
   module: {
     rules: [
       {
@@ -110,11 +114,11 @@ var webpackConfig = {
       //将css从打包的js中提取出来
       filename: '[name]_[contenthash:8].css'
     }),
-    new OptimizeCSSAssetsPlugin({
-      //压缩css文件 css的压缩需要cssnano插件
-      assetNameRegExp: /\.css$/g,
-      cssProcessor: require('cssnano')
-    }),
+    // new OptimizeCSSAssetsPlugin({
+    //   //压缩css文件 css的压缩需要cssnano插件
+    //   assetNameRegExp: /\.css$/g,
+    //   cssProcessor: require('cssnano')
+    // }),
     new CleanWebpackPlugin(),
     // new copyHtmlWebpackPlugin([
     //   {
@@ -146,25 +150,60 @@ var webpackConfig = {
   optimization: {
     splitChunks:{
       cacheGroups: {
-        // commons:{
-        //   test:/(react|react-dom)/,
-        //   name: 'common',
-        //   chunks:'all'
-        // }
-        commons: {
-          chunks: "initial",
-          minChunks: 2,
-          maxInitialRequests: 5, // The default limit is too small to showcase the effect
-          minSize: 0,// This is example is too small to create commons chunks,
-        },
-        'vender-react':{
-          test:/react/,
-          chunks:'initial',
-          name:'vender-react',
-          enforce:true
-        }
+    //     // commons:{
+    //     //   test:/(react|react-dom)/,
+    //     //   name: 'common',
+    //     //   chunks:'all'
+    //     // }
+
+           common:{
+              chunks: 'all',
+               name: 'common'
+           }
+    //     // commons: {
+    //     //   chunks: "initial",
+    //     //   minChunks: 2,
+    //     //   maxInitialRequests: 5, // The default limit is too small to showcase the effect
+    //     //   minSize: 0,// This is example is too small to create commons chunks,
+    //     // },
+    //     'vender-react':{
+    //       test:/react|react-dom/,
+    //       chunks:'initial',
+    //       name:'vender-react',
+    //     }
       }
-    }
+    },
+
+    //配置压缩优化
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+            output: {
+              comments: false,
+            },
+            compress: {
+                drop_console: true,
+                drop_debugger: true,
+                pure_funcs: ['console.log']
+            }
+          },
+          extractComments: false,
+    }),
+      //配置css压缩优化
+      new OptimizeCSSAssetsPlugin({
+          assetNameRegExp: /\.css$/g,
+          cssProcessor: require('cssnano'), //引用css预处理器来处理css
+          cssProcessorOptions:{
+              safe:true,
+              autoprefixer: {disable:true}, //禁止把autoprefixer添加的兼容前缀抹除
+              mergeLonghand: false,   //禁止合并分开写的margin padding
+              discardComments:{removeAll:true}  //移除css中的注释
+          }
+        }),
+  ],
+    runtimeChunk: {   //将webpack的公共模块管理，信息清单等提取出来为一个公共包
+          name: "manifest"
+        }
   },
   // devtool: 'source-map',//一般开发时配置用于调试，报错时可显示源码
   watchOptions: {

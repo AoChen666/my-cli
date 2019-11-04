@@ -6,7 +6,6 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const htmlWebpackExternalsPlugin=require('html-webpack-externals-plugin');
 
 const BASE_PATH = path.resolve(__dirname);
 const SRC_PATH = path.resolve(BASE_PATH,'src');
@@ -50,10 +49,10 @@ var webpackConfig = {
     path: BUILD_PATH,
     filename: '[name]_[chunkhash:8].js'
   },
-  // externals:{
-  //   "react":'React',
-  //   "react-dom":'ReactDOM'
-  // },
+  externals:{
+    "react":'React',
+    "react-dom":'ReactDOM'
+  },
   module: {
     rules: [
       {
@@ -91,7 +90,7 @@ var webpackConfig = {
             loader: 'url-loader',
             options: {
               limit: 1024,
-              outputPath: 'images',
+              outputPath: 'images_r',
               name: '[name]_[hash:8].[ext]'
             }
           }
@@ -120,35 +119,40 @@ var webpackConfig = {
     }),
     new CleanWebpackPlugin()
   ].concat(htmlPage),
-  optimization: {
-    splitChunks:{
-      // chunks: "all",
-      cacheGroups: {
-        //  commons:{
-        //   test:/react/,
-        //   name: 'common',
-        //   chunks:'all'
-        // },
-        commons: {
-          chunks: "initial",
-          minChunks: 2,
-          name:'common',
-          maxInitialRequests: 5, // The default limit is too small to showcase the effect
-          minSize: 0,// This is example is too small to create commons chunks,
-        },
-        'vendor-react':{
-          test:/node_modules/,
-          chunks:'initial',
-          name:'vendor-react',
-          enforce:true,
-          priority:1
-        }
-      }
-    },
-    runtimeChunk: {   //将webpack的公共模块管理，信息清单等提取出来为一个公共包
-      name: "manifest"
-    }
-  },
+  // optimization: {
+  //   splitChunks:{
+  //     // chunks: "all",
+  //     cacheGroups: {
+  //       //  commons:{
+  //       //   test:/react/,
+  //       //   name: 'common',
+  //       //   chunks:'all'
+  //       // },
+  //       // commons: {
+  //       //   chunks: "initial",
+  //       //   minChunks: 2,
+  //       //   name:'common',
+  //       //   maxInitialRequests: 5, // The default limit is too small to showcase the effect
+  //       //   minSize: 0,// This is example is too small to create commons chunks,
+  //       // },
+  //       'vendor-react':{
+  //         test:/node_modules/,
+  //         chunks:'initial',
+  //         name:'vendor-react',
+  //         priority:1
+  //       },
+  //       // 'lodash':{
+  //       //   test:/lodash/,
+  //       //   chunks:'initial',
+  //       //   name:'lodash',
+  //       //   priority:2
+  //       // }
+  //     }
+  //   },
+  //   runtimeChunk: {   //将webpack的公共模块管理，信息清单等提取出来为一个公共包
+  //     name: "manifest"
+  //   }
+  // },
   // devtool: 'source-map',//一般开发时配置用于调试，报错时可显示源码
   watchOptions: {
     ignored: /node_modules/,//不监听的文件
