@@ -11,7 +11,7 @@ const BASE_PATH = path.resolve(__dirname);
 const SRC_PATH = path.resolve(BASE_PATH,'src');
 const BUILD_PATH = path.resolve(BASE_PATH,'build');
 
-const setMPA = () => {
+const setMPA = () => { 
   var entry = {};
   var htmlPage = [];
   const entryFiles = glob.sync(path.resolve(__dirname,'./src/*/index.js'));
@@ -49,10 +49,10 @@ var webpackConfig = {
     path: BUILD_PATH,
     filename: '[name]_[chunkhash:8].js'
   },
-  externals:{
-    "react":'React',
-    "react-dom":'ReactDOM'
-  },
+  // externals:{
+  //   "react":'React',
+  //   "react-dom":'ReactDOM'
+  // },
   module: {
     rules: [
       {

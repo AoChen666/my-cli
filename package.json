@@ -6,7 +6,7 @@
   "is": "file:node_modules/is",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set NODE_ENV=develoment&&webpack --config ./webpack.config.js",
+    "dev": "set NODE_ENV=development&&webpack --mode=development --config ./webpack.config.js",
     "build": "set NODE_ENV=production&&webpack --config ./webpack.prod.config.js"
   },
   "browserslist": [

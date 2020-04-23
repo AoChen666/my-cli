@@ -1,6 +1,7 @@
 import React,{Component,lazy,Suspense} from 'react';
 import ReactDom from 'react-dom';
-import {a} from '../common/common.js';
+import {chenyuechan} from '../common/common.js';
+import {a} from './a';
 import {isEqual} from 'lodash'
 
 import './index.less';
@@ -25,7 +26,7 @@ export default class Index extends Component{
     isEqual({a:1},{a:1});
   }
   render(){
-    // console.log(w,22)
+    console.log(a,22,chenyuechan)
     const {Search} = this.state;
     return (
       <div className="box">
